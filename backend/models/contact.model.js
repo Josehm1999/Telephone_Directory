@@ -1,12 +1,11 @@
 import mongoose from 'mongoose';
 
 const contactSchema = new mongoose.Schema({
-  name: { type: String, required: [true, 'Name is required'], unique: true },
+  name: { type: String, required: [true, 'Name is required'] },
   landline: { type: String, required: [true, 'Landline is required'] },
   cellphone: {
     type: String,
     required: [true, 'Cellphone is required'],
-    unique: true,
   },
   directory: {
     type: mongoose.Schema.Types.ObjectId,

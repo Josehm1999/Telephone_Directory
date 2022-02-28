@@ -17,9 +17,24 @@ const isPhoneNumberValid = async (req, res, next) => {
     : next();
 };
 const existingContact = async (req, res, next) => {
-  const existingContactDB = await contact.findOne({ name: req.body.name });
+  const existingContactDB = await contact.findOne({
+    name: req.body.name,
+    directory: req.body.directoryId,
+  });
   return existingContactDB
     ? res.status(400).send({ message: 'This contact is already registered' })
+    : next();
+};
+
+const existsPhoneNumber = async (req, res, next) => {
+  const existingPhoneDB = await contact.findOne({
+    cellphone: req.body.cellphone,
+    directory: req.body.directoryId,
+  });
+  return existingPhoneDB
+    ? res
+        .status(400)
+        .send({ message: 'This cellphone number is already registered' })
     : next();
 };
 
@@ -40,4 +55,5 @@ export {
   isDirectoryFull,
   isFieldNameEmpty,
   isPhoneNumberValid,
+  existsPhoneNumber,
 };

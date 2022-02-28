@@ -8,6 +8,7 @@ import {
 } from '../controllers/contact.controller.js';
 import {
   existingContact,
+  existsPhoneNumber,
   isDirectoryFull,
   isFieldNameEmpty,
   isPhoneNumberValid,
@@ -15,13 +16,35 @@ import {
 import validId from '../middlewares/validId.js';
 const router = express.Router();
 
-router.get('/searchContact/:name', [isFieldNameEmpty], searchContact);
-router.get('/isRegistered/:name', [isFieldNameEmpty], isRegistered);
+/*
+ * @_id: Id of directory
+ * @name: name of contact
+ * */
+router.get(
+  '/searchContact/:_id/:name',
+  [validId, isFieldNameEmpty],
+  searchContact
+);
+
+/*
+ * @_id: Id of directory
+ * @name: name of contact
+ * */
+router.get(
+  '/isRegistered/:_id/:name',
+  [validId, isFieldNameEmpty],
+  isRegistered
+);
+
 router.post(
   '/createContact',
-  [existingContact, isDirectoryFull, isPhoneNumberValid],
+  [existingContact, isDirectoryFull, isPhoneNumberValid, existsPhoneNumber],
   createContact
 );
 
-router.delete('/delete/:_id', [validId, existingContact], deleteContact);
+/*
+ * @_id: Id of directory
+ * @name: name of contact
+ * */
+router.delete('/delete/:_id/:name', [validId, existingContact], deleteContact);
 export default router;

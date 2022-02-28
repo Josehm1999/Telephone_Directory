@@ -12,14 +12,13 @@ const createDirectory = async (req, res = Response) => {
 
 const listContacts = async (req, res = Response) => {
   const { _id } = req.params;
-  const directoryDB = await directory.findById(_id).populate('contacts');
+  const { contacts } = await directory.findById(_id).populate('contacts');
 
-  if (directoryDB)
+  if (!contacts || contacts.length === 0)
     return res
       .status(500)
       .send({ message: 'You haven´t registered any numbers yet' });
-
-  return res.status(200).json({ directoryDB });
+  return res.status(200).json({ contacts });
 };
 
 const freeSpaces = async (req, res = Response) => {

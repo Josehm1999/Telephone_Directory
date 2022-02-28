@@ -18,7 +18,7 @@ const createContact = async (req, res = Response) => {
 
   let result = await schema.save();
 
-  if (!result) res.status(500).send({ message: 'Failed to register task' });
+  if (!result) res.status(500).send({ message: 'Failed to register contact' });
 
   await directory.findByIdAndUpdate(directoryId, {
     $push: {
@@ -29,31 +29,29 @@ const createContact = async (req, res = Response) => {
 };
 
 const searchContact = async (req, res = Response) => {
-  const { name } = req.params;
-  const contacts = await contact.findOne({ name });
+  const { name, _id } = req.params;
+  const contacts = await contact.findOne({ name, directory: _id });
   return !contacts
-    ? res.status(400).send({ message: 'Contact not found' })
+    ? res.status(400).json({ message: 'Contact not found' })
     : res.status(200).json({ landline: contacts.landline });
 };
 
 const isRegistered = async (req, res = Response) => {
-  const { name } = req.params;
-  const contacts = await contact.findOne({ name });
+  const { name, _id } = req.params;
+  const contacts = await contact.findOne({ name, directory: _id });
   return !contacts
-    ? res
-        .status(200)
-        .send({ message: `Contact: ${name} is not registered yet` })
-    : res.status(400).send({ message: 'Contact is already registered' });
+    ? res.status(200).json({ message: `${name} is not registered yet` })
+    : res.status(400).json({ message: 'Contact is already registered' });
 };
 
 const deleteContact = async (req, res = Response) => {
-  const { _id } = req.params;
-  if (!_id) return res.status(400).send({ message: 'Incomplete data' });
+  const { name, _id } = req.params;
+  if (!name) return res.status(400).send({ message: 'Incomplete data' });
 
   try {
-    const contacts = await contact.findOneAndDelete(_id);
-    await directory.findByIdAndUpdate(contacts.directory, {
-      $pull: { contacts: _id },
+    const contacts = await contact.findOneAndDelete({ name, directory: _id });
+    await directory.findByIdAndUpdate(_id, {
+      $pull: { contacts: contacts._id },
     });
     return res.status(200).send({ message: 'Contact deleted' });
   } catch (error) {
