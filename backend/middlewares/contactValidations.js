@@ -6,6 +6,16 @@ const isFieldNameEmpty = async (req, res, next) => {
 
   return !name ? res.status(400).send({ message: 'Data incomplete' }) : next();
 };
+
+const isPhoneNumberValid = async (req, res, next) => {
+  const { landline, cellphone } = req.body;
+
+  const regex = new RegExp(`^[2-9][0-9]{6,8}$`);
+
+  return !regex.test(landline) || !regex.test(cellphone)
+    ? res.status(400).send({ message: 'Cellphone or Landline invalid' })
+    : next();
+};
 const existingContact = async (req, res, next) => {
   const existingContactDB = await contact.findOne({ name: req.body.name });
   return existingContactDB
@@ -25,4 +35,9 @@ const isDirectoryFull = async (req, res, next) => {
     : next();
 };
 
-export { existingContact, isDirectoryFull, isFieldNameEmpty };
+export {
+  existingContact,
+  isDirectoryFull,
+  isFieldNameEmpty,
+  isPhoneNumberValid,
+};

@@ -10,6 +10,7 @@ import {
   existingContact,
   isDirectoryFull,
   isFieldNameEmpty,
+  isPhoneNumberValid,
 } from '../middlewares/contactValidations.js';
 import validId from '../middlewares/validId.js';
 const router = express.Router();
@@ -18,7 +19,7 @@ router.get('/searchContact/:name', [isFieldNameEmpty], searchContact);
 router.get('/isRegistered/:name', [isFieldNameEmpty], isRegistered);
 router.post(
   '/createContact',
-  [existingContact, isDirectoryFull],
+  [existingContact, isDirectoryFull, isPhoneNumberValid],
   createContact
 );
 

@@ -6,7 +6,7 @@ import directory from '../models/directory.model.js';
 const createContact = async (req, res = Response) => {
   const { directoryId, name, landline, cellphone } = req.body;
 
-  if (!directoryId || !name || !landline || !cellphone)
+  if (!directoryId || !name)
     return res.status(400).send({ message: 'Incomplete data' });
 
   let schema = new contact({
