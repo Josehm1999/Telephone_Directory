@@ -1,20 +1,19 @@
 import axios from 'axios';
 
+const url = 'http://localhost:8080/api/directory';
 const createDirectory = async () => {
-  const directory = await axios.post(
-    'http://localhost:8080/api/directory/createDirectory',
-    {}
-  );
+  const directory = await axios.post(`${url}/createDirectory`, {});
   return directory.data.savedDirectory._id;
 };
 
 const listContacts = async (id) => {
   try {
-    const contacts = await axios.get(
-      `http://localhost:8080/api/directory/${id}`
-    );
+    const { data } = await axios.get(`${url}/${id}`);
 
-    return contacts.data.contacts;
+    const newContacts = data.contacts.map(
+      ({ _id, directory, registerDate, __v, ...rest }) => rest
+    );
+    return newContacts;
   } catch (error) {
     return error.response.data;
   }
@@ -22,9 +21,7 @@ const listContacts = async (id) => {
 
 const freeSpaces = async (id) => {
   try {
-    const { data } = await axios.get(
-      `http://localhost:8080/api/directory/freeSpaces/${id}`
-    );
+    const { data } = await axios.get(`${url}/freeSpaces/${id}`);
     return data.freeSpacesLeft;
   } catch (error) {
     return error.response.data;

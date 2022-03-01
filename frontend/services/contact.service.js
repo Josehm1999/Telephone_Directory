@@ -1,4 +1,5 @@
 import axios from 'axios';
+import chalk from 'chalk';
 
 const url = 'http://localhost:8080/api/contact';
 
@@ -11,7 +12,7 @@ const createContact = async (name, landline, cellphone, id) => {
       directoryId: id,
     });
 
-    return `Contact ${data.name} created succesfully`;
+    return `Contact ${data.contact.name} created succesfully`;
   } catch (error) {
     return error.response.data;
   }
@@ -28,9 +29,9 @@ const isRegistered = async (id, name) => {
 const searchContact = async (id, name) => {
   try {
     const { data } = await axios.get(`${url}/searchContact/${id}/${name}`);
-    return data.landline;
+    return `${chalk.green('The contacts landline is: ' + data.landline)}`;
   } catch (error) {
-    return error.response.data.message;
+    return chalk.green(error.response.data.message);
   }
 };
 

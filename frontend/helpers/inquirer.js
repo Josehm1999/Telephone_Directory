@@ -101,4 +101,16 @@ const readInputNumbers = async (message) => {
   return num;
 };
 
-export { inquirerMenu, pause, readInput, readInputNumbers };
+const confirmation = async (message) => {
+  const question = [
+    {
+      type: 'confirm',
+      name: 'ok',
+      message,
+    },
+  ];
+
+  const { ok } = await inquirer.prompt(question);
+  return ok;
+};
+export { inquirerMenu, pause, readInput, readInputNumbers, confirmation };

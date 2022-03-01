@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 
 import {
+  confirmation,
   inquirerMenu,
   pause,
   readInput,
@@ -25,7 +26,6 @@ const main = async () => {
   const id = await createDirectory();
   do {
     opt = await inquirerMenu();
-    console.log({ opt });
 
     switch (opt) {
       case '1':
@@ -33,31 +33,42 @@ const main = async () => {
         let landline = await readInputNumbers('Landline: ');
         let cellphone = await readInputNumbers('Cellphone');
 
-        let createdContact = await createContact(name, landline, cellphone, id);
+        let createdContact = await createContact(
+          name.trim(),
+          landline.trim(),
+          cellphone.trim(),
+          id
+        );
         console.log(createdContact);
         break;
 
       case '2':
         const contacts = await listContacts(id);
-        console.log(contacts);
+        console.log(chalk.green(contacts));
         break;
 
       case '3':
         let nameS = await readInput('Name: ');
-        let contact = await searchContact(id, nameS);
+        let contact = await searchContact(id, nameS.trim());
         console.log(contact);
         break;
 
       case '4':
         let nameR = await readInput('Name: ');
-        let message = await isRegistered(id, nameR);
-        console.log(message);
+        let message = await isRegistered(id, nameR.trim());
+        console.log(chalk.green(message));
         break;
 
       case '5':
         let nameD = await readInput('Name: ');
-        let messageD = await deleteContact(id, nameD);
-        console.log(messageD);
+        let ok = await confirmation(
+          'Are you sure you want to delete this contact?'
+        );
+        if (ok) {
+          let messageD = await deleteContact(id, nameD.trim());
+          console.log(chalk.green(messageD));
+        }
+
         break;
 
       case '6':
